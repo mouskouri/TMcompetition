@@ -61,7 +61,7 @@ def cal_least_buy_day_count(now, least):
 def build_train(train_user):
 
 	with open('train_with_all_feature.csv', 'w') as train:
-		train.write('user_id,item_id,label,item_category,time,user_buy_count,user_click_count,user_collect_count,user_cart_count,user_click_buy_rate,user_least_buy_day_count,user_last_7_day_click_count,user_last_7_day_buy_count,user_last_7_day_collect_count,user_last_7_day_cart_count,item_buy_count,item_click_count,item_collect_count,item_cart_count,item_click_buy_rate,item_hot_level,item_least_buy_day_count,item_last_7_day_click_count,item_last_7_day_buy_count,item_last_7_day_collect_count,item_last_7_day_cart_count,buy_count,click_count,collect_count,cart_count,least_click_day_count,least_collect_day_count,least_cart_day_count,least_buy_day_count,last_7_day_click_count,last_7_day_buy_count,last_7_day_collect_count,last_7_day_cart_count\n')
+		train.write('user_id,item_id,label,item_category,time,user_buy_count,user_click_count,user_collect_count,user_cart_count,user_click_buy_rate,user_least_buy_day_count,user_last_7_day_click_count,user_last_7_day_buy_count,user_last_7_day_collect_count,user_last_7_day_cart_count,item_buy_count,item_click_count,item_collect_count,item_cart_count,item_click_buy_rate,item_hot_level,item_least_buy_day_count,item_last_7_day_click_count,item_last_7_day_buy_count,item_last_7_day_collect_count,item_last_7_day_cart_count\n')
 		
 		for t, row in enumerate(DictReader(open(train_user))):
 
@@ -83,19 +83,19 @@ def build_train(train_user):
 			item_least_buy_time = item_feature_dic[item_id]['item_least_buy_day_count']
 			item_least_buy_day_count = cal_least_buy_day_count(now_time, item_least_buy_time)
 
-			least_click_day_time = user_and_item_feature_dic[Eid]['least_click_day_count']
-			least_click_day_count = cal_least_buy_day_count(now_time, least_click_day_time)
+			#least_click_day_time = user_and_item_feature_dic[Eid]['least_click_day_count']
+			#least_click_day_count = cal_least_buy_day_count(now_time, least_click_day_time)
 
-			least_collect_day_time = user_and_item_feature_dic[Eid]['least_collect_day_count']
-			least_collect_day_count = cal_least_buy_day_count(now_time, least_collect_day_time)
+			#least_collect_day_time = user_and_item_feature_dic[Eid]['least_collect_day_count']
+			#least_collect_day_count = cal_least_buy_day_count(now_time, least_collect_day_time)
 
-			least_cart_day_time = user_and_item_feature_dic[Eid]['least_cart_day_count']
-			least_cart_day_count = cal_least_buy_day_count(now_time, least_cart_day_time)
+			#least_cart_day_time = user_and_item_feature_dic[Eid]['least_cart_day_count']
+			#least_cart_day_count = cal_least_buy_day_count(now_time, least_cart_day_time)
 
-			least_buy_day_time = user_and_item_feature_dic[Eid]['least_buy_day_count']
-			least_buy_day_count = cal_least_buy_day_count(now_time, least_buy_day_time)
+			#least_buy_day_time = user_and_item_feature_dic[Eid]['least_buy_day_count']
+			#least_buy_day_count = cal_least_buy_day_count(now_time, least_buy_day_time)
 
-			train.write('%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n' % (row['user_id'],row['item_id'],row['label'],row['item_category'],row['time'],
+			train.write('%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n' % (row['user_id'],row['item_id'],row['label'],row['item_category'],row['time'],
 				user_feature_dic[user_id]['user_buy_count'],
 				user_feature_dic[user_id]['user_click_count'],
 				user_feature_dic[user_id]['user_collect_count'],
@@ -116,25 +116,25 @@ def build_train(train_user):
 				item_feature_dic[item_id]['item_last_7_day_click_count'],
 				item_feature_dic[item_id]['item_last_7_day_buy_count'],
 				item_feature_dic[item_id]['item_last_7_day_collect_count'],
-				item_feature_dic[item_id]['item_last_7_day_cart_count'],
-				user_and_item_feature_dic[Eid]['buy_count'],
-				user_and_item_feature_dic[Eid]['click_count'],
-				user_and_item_feature_dic[Eid]['collect_count'],
-				user_and_item_feature_dic[Eid]['cart_count'],
-				least_click_day_count,
-				least_collect_day_count,
-				least_cart_day_count,
-				least_buy_day_count,
-				user_and_item_feature_dic[Eid]['last_7_day_click_count'],
-				user_and_item_feature_dic[Eid]['last_7_day_buy_count'],
-				user_and_item_feature_dic[Eid]['last_7_day_collect_count'],
-				user_and_item_feature_dic[Eid]['last_7_day_cart_count']))
+				item_feature_dic[item_id]['item_last_7_day_cart_count']))
+				#user_and_item_feature_dic[Eid]['buy_count'],
+				#user_and_item_feature_dic[Eid]['click_count'],
+				#user_and_item_feature_dic[Eid]['collect_count'],
+				#user_and_item_feature_dic[Eid]['cart_count'],
+				#least_click_day_count,
+				#least_collect_day_count,
+				#least_cart_day_count,
+				#least_buy_day_count,
+				#user_and_item_feature_dic[Eid]['last_7_day_click_count'],
+				#user_and_item_feature_dic[Eid]['last_7_day_buy_count'],
+				#user_and_item_feature_dic[Eid]['last_7_day_collect_count'],
+				#user_and_item_feature_dic[Eid]['last_7_day_cart_count']))
 
 		
 build_user(user_feature)
 
 build_item(item_feature)
 
-build_user_and_item(user_and_item_feature)
+#build_user_and_item(user_and_item_feature)
 
 build_train(train)

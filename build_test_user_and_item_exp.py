@@ -62,7 +62,7 @@ def cal_inter_item(path):
 def build_user_item_exp():
 
 	with open('test_user_item.csv', 'w') as test:
-		test.write('user_id,iten_id,item_category\n')
+		test.write('user_id,item_id,item_category\n')
 		for item in item_test_dic:
 			user_list = item_userdic[item]
 			for user in user_list:

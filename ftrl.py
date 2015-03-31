@@ -29,9 +29,9 @@ from math import exp, log, sqrt
 ##############################################################################
 
 # A, paths
-train = 'train_rev2'               # path to training file
-test = 'test_rev2'                 # path to testing file
-submission = 'submission1234.csv'  # path of to be outputted submission file
+train = 'train_with_all_feature.csv'               # path to training file
+test = 'test_with_all_feature.csv'                 # path to testing file
+submission = 'submission.csv'  # path of to be outputted submission file
 
 # B, model
 alpha = .1  # learning rate
@@ -45,7 +45,7 @@ interaction = False     # whether to enable poly2 feature interactions
 
 # D, training/validation
 epoch = 1       # learn training data for N passes
-holdafter = '12-17-00'   # data after date N (exclusive) are used as validation
+#holdafter = '12-20-00'   # data after date N (exclusive) are used as validation
 
 
 ##############################################################################
@@ -227,9 +227,12 @@ def data(path, D):
             del row['label']
 
         # extract date
-        date = row['time'].split()
-        date[0] = date[0][5:]
-        time = '-'.join(date)   #time = 11-26-20
+        time = '1218'
+        if 'time' in row:
+            date = row['time'].split()
+            date = date[0][5:].split('-')
+            time = ''.join(date)
+
     
         # build x
         x = []
@@ -266,8 +269,13 @@ for e in xrange(epoch):
 
         # step 1, get prediction from learner
         p = learner.predict(x)
+        loss += logloss(p, y)
+        learner.update(x, p, y)
 
-        if (time > holdafter) :
+        if t % 1000000 == 0 and t > 1:
+            print('%s\tencountered: %d\tcurrent logloss: %f' % (datetime.now(), t, loss/t))
+
+        #if (time > holdafter) :
             # step 2-1, calculate validation loss
             #           we do not train with the validation data so that our
             #           validation loss is an accurate estimation
@@ -276,14 +284,14 @@ for e in xrange(epoch):
             #            validate with instances from day N + 1 and after
             #
             # holdout: validate with every N instance, train with others
-            loss += logloss(p, y)
-            count += 1
-        else:
+            #loss += logloss(p, y)
+            #count += 1
+        #else:
             # step 2-2, update learner with label (click) information
-            learner.update(x, p, y)
+            #learner.update(x, p, y)
 
-    print('Epoch %d finished, validation logloss: %f, elapsed time: %s' % (
-        e, loss/count, str(datetime.now() - start)))
+    #print('Epoch %d finished, validation logloss: %f, elapsed time: %s' % (
+        #e, loss/count, str(datetime.now() - start)))
 
 
 ##############################################################################
