@@ -7,6 +7,9 @@ test_user_feature = 'test_user_feature.csv'
 test_item_feature = 'test_item_feature.csv'
 test_user_and_item_feature = 'test_user_and_item_feature.csv'
 
+if_validation = True
+splitime = '12-18-00'
+
 item_userdic = {}
 item_dop = []
 user_dop = []
@@ -17,6 +20,14 @@ def cal_abnormal(path):
 	user_dic = {}
 
 	for t, row in enumerate(DictReader(open(path))):
+
+		time = row['time'].split()
+		time[0] = time[0][5:]
+		time = '-'.join(time)   #time = 11-26-20
+
+		if(if_validation):
+			if(time > splitime):
+				continue
 
 		if row['item_id'] not in item_dic:
 			item_dic[row['item_id']] = [0,0,0,0]
@@ -45,11 +56,21 @@ def cal_abnormal(path):
 def cal_item_user_dic(path):
 
 	for t, row in enumerate(DictReader(open(path))):
+
+		time = row['time'].split()
+		time[0] = time[0][5:]
+		time = '-'.join(time)   #time = 11-26-20
+
+		if(if_validation):
+			if(time > splitime):
+				continue
+
 		if((row['item_id'] in item_dop) or(row['user_id'] in user_dop)):
 			continue
 		if(row['item_id'] not in item_userdic):
-			item_userdic[row['item_id']] = []
-		item_userdic[row['item_id']].append(row['user_id'])
+			item_userdic[row['item_id']] = {}
+		if(row['user_id'] not in item_userdic[row['item_id']]):
+			item_userdic[row['item_id']][row['user_id']] = 0
 
 
 def cal_inter_item(path):
@@ -61,11 +82,11 @@ def cal_inter_item(path):
 		
 def build_user_item_exp():
 
-	with open('test_user_item.csv', 'w') as test:
+	with open('test_user_item_validation.csv', 'w') as test:
 		test.write('user_id,item_id,item_category\n')
 		for item in item_test_dic:
-			user_list = item_userdic[item]
-			for user in user_list:
+			user_dic = item_userdic[item]
+			for user in user_dic:
 				test.write('%s,%s,%s\n' % (user,item,item_test_dic[item]))
 
 
