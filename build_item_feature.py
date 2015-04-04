@@ -11,7 +11,9 @@ user_dic = {}
 user_list = []
 user_buy_time_nearest = {}
 user_nearest_date_of_week = {}
+user_nearest_date_of_3 = {}
 user_last_7_day = {}
+user_last_3_day = {}
 cart_dic = {}
 
 def data(path, flag):
@@ -79,6 +81,17 @@ def data(path, flag):
 			if(date > user_nearest_date_of_week[row['item_id']][0]):
 				user_nearest_date_of_week[row['item_id']][0] = date
 
+		#cal nearest date of a 3
+		if(row['item_id'] not in user_nearest_date_of_3):
+			user_nearest_date_of_3[row['item_id']] = []
+
+		if(len(user_nearest_date_of_3[row['item_id']])<3):
+			user_nearest_date_of_3[row['item_id']].append(date)
+		else:
+			user_nearest_date_of_3[row['item_id']].sort()
+			if(date > user_nearest_date_of_3[row['item_id']][0]):
+				user_nearest_date_of_3[row['item_id']][0] = date
+
 		#if count == 100:
 			#break
 
@@ -93,6 +106,7 @@ def data(path, flag):
 				continue
 
 		last_7_day = user_nearest_date_of_week[row['item_id']]
+		last_3_day = user_nearest_date_of_3[row['item_id']]
 
 		date = row['time'].split()
 		date = date[0][5:].split('-')
@@ -104,6 +118,12 @@ def data(path, flag):
 
 			user_last_7_day[row['item_id']][int(row['behavior_type'])-1] += 1
 
+		if(date in last_3_day):
+			if(row['item_id'] not in user_last_3_day):
+				user_last_3_day[row['item_id']] = [0,0,0,0]
+
+			user_last_3_day[row['item_id']][int(row['behavior_type'])-1] += 1
+
 
 	for key in user_dic:
 		item_hot_level = float(user_dic[key][0])*0.1+float(user_dic[key][3])*5+float(user_dic[key][1])+float(user_dic[key][2])
@@ -111,11 +131,6 @@ def data(path, flag):
 		user_click_buy_rate = float(user_dic[key][3]) / (float(user_dic[key][0])+float(user_dic[key][1])+float(user_dic[key][2])+float(user_dic[key][3]))
 		user_dic[key].append(user_click_buy_rate)
 		user_dic[key].append(item_hot_level)
-
-	if('320395600' not in cart_dic):
-		print 'hello'
-
-
 
 	#userdic = sorted(user_dic.items(), key = lambda d:d[1][3], reverse = True)
 	#print user_buy_time
@@ -125,7 +140,7 @@ def construct(path):
 
 	with open(path, 'w') as user:
 
-		user.write('item_id,item_last_day_click_count,item_last_day_collect_count,item_last_day_cart_count,item_last_day_buy_count,item_buy_count,item_click_count,item_collect_count,item_cart_count,item_click_buy_rate,item_hot_level,item_least_buy_day_count,item_last_7_day_click_count,item_last_7_day_buy_count,item_last_7_day_collect_count,item_last_7_day_cart_count\n')
+		user.write('item_id,item_last_day_click_count,item_last_day_collect_count,item_last_day_cart_count,item_last_day_buy_count,item_buy_count,item_click_count,item_collect_count,item_cart_count,item_click_buy_rate,item_hot_level,item_least_buy_day_count,item_last_3_day_click_count,item_last_3_day_buy_count,item_last_3_day_collect_count,item_last_3_day_cart_count,item_last_7_day_click_count,item_last_7_day_buy_count,item_last_7_day_collect_count,item_last_7_day_cart_count\n')
 		for key in user_dic:
 			#cart_count = 0
 			#if(key in cart_dic):
@@ -133,7 +148,7 @@ def construct(path):
 			user_least_buy_day = '0000'
 			if(key in user_buy_time_nearest):
 				user_least_buy_day = user_buy_time_nearest[key]
-			user.write('%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n' % (key,
+			user.write('%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n' % (key,
 				cart_dic[key][0],
 				cart_dic[key][1],
 				cart_dic[key][2],
@@ -145,6 +160,10 @@ def construct(path):
 				user_dic[key][4],
 				user_dic[key][5],
 				user_least_buy_day,
+				user_last_3_day[key][0],
+				user_last_3_day[key][3],
+				user_last_3_day[key][1],
+				user_last_3_day[key][2],
 				user_last_7_day[key][0],
 				user_last_7_day[key][3],
 				user_last_7_day[key][1],
